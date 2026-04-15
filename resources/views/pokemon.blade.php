@@ -25,7 +25,7 @@
                     <h3 class="text-lg font-semibold mb-2">Línea Evolutiva:</h3>
                     <div class="flex flex-row items-center gap-4 overflow-x-auto">
                         @php
-                            // Esta función muestra la cadena de evolución de un Pokémon de forma recursiva
+                            // Esta función muestra la cadena de evolución de un Pokémon
                             // $chain es la parte actual de la cadena, $details son los métodos de evolución (opcional)
                             function displayEvolution($chain, $details = null) {
                                 // Si no hay URL de especie, no mostrar nada (evita errores)

@@ -3,30 +3,47 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Artisan;
 use App\Models\Pokemon;
-use App\Models\Type;
+use App\Models\Evolution;
 
 class PokemonAdminController extends Controller
 {
-    public function generar()
+    public function generar(Request $request)
     {
-        for ($i= 1; $i <= 151; $i++) {
-            $data = Http::withoutVerifying()->get("https://pokeapi.co/api/v2/pokemon/$i")->json();
-
-            $pokemon = Pokemon:: updateOrCreate(
-                ['pokedex_number'=> $i],
-                ['name' => $data['name'], 'sprite' => $data['sprites']['front_default']]
-            );
-
-            foreach ($data['types'] as $type) {
-                $typeName = $type['type']['name'];
-                $type = Type::firstOrCreate(['name' => $typeName]);
-                $pokemon->types()->syncWithoutDetaching($type->id);
-            }
-            
-        }
+        set_time_limit(0);
+        // Ejecutar el comando Artisan para procesar los datos
+        Artisan::call('app:generate-pokemon-data');
 
         return redirect()->back()->with('success', 'Datos de Pokémon generados correctamente.');
     }
+
+    private function procesarCadena(array $chain): void
+    {
+        $from = $chain['species']['name'];
+
+        foreach ($chain['evolves_to'] as $evo) {
+            $to = $evo['species']['name'];
+
+            $fromPokemon = Pokemon::where('name', $from)->first();
+            $toPokemon = Pokemon::where('name', $to)->first();
+
+            if ($fromPokemon && $toPokemon) {
+                Evolution::updateOrCreate(
+                    [
+                        'pokemon_id' => $fromPokemon->id,
+                        'to_pokemon_id' => $toPokemon->id,
+                    ],
+                    [
+                        'min_level' => $evo['evolution_details'][0]['min_level'] ?? null,
+                        'trigger' => $evo['evolution_details'][0]['trigger']['name'] ?? null,
+                        'item' => $evo['evolution_details'][0]['item']['name'] ?? null,
+                    ]
+                );
+            }
+
+            $this->procesarCadena($evo);
+        }
+    }
 }
+

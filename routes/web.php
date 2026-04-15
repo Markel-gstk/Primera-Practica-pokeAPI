@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PokemonController;
 use App\Http\Controllers\PokemonAdminController;
 use App\Http\Controllers\ProfileController;
@@ -9,9 +10,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
+/* Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard'); */
+
+Route::get('/dashboard', [DashboardController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -27,4 +30,8 @@ Route::get('/pokemons', [PokemonController::class, 'index'])->middleware('auth')
 
 Route::get('/pokemon/{id}', [PokemonController::class, 'show'])->name('pokemon.show');
 
-Route::post('/admin/generar-datos', [PokemonAdminController::class, 'generar'])->middleware(['auth', \App\Http\Middleware\AdminOnly::class]);
+Route::get('/admin/generar-datos', function () {
+    return redirect('/dashboard')->with('error', 'Por favor, usa el formulario en el dashboard para generar datos.');
+})->middleware(['auth', \App\Http\Middleware\AdminOnly::class]);
+
+Route::post('/admin/generar-datos', [PokemonAdminController::class, 'generar'])->middleware(['auth', \App\Http\Middleware\AdminOnly::class])->name('admin.generar');
