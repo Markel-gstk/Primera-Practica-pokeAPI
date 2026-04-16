@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
     public function index()
-    {
-        $mostrarFormulario = Pokemon::count() < 1;
-        return view('dashboard', compact('mostrarFormulario'));
+    {    
+       $mostrarFormulario = Pokemon::count();
+       return view('dashboard', compact('mostrarFormulario'));
     }
 }

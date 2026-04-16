@@ -7,25 +7,45 @@ use Illuminate\Support\Facades\Http;
 use App\Models\Pokemon;
 use App\Models\Type;
 use App\Models\Evolution;
+use Illuminate\Support\Facades\log;
 
 class GeneratePokemonData extends Command
 {
-    protected $signature = 'app:generate-pokemon-data';
+    protected $signature = 'app:generate-pokemon-data {generation}';
     protected $description = 'Genera datos de Pokémon desde PokeAPI';
     public function handle()
     {
         set_time_limit(0);
+
+        $gen = $this->argument('generation');
+        Log::info("Generacion " . $gen . " iniciada.");
         $this->info('Iniciando generación de datos de Pokémon...');
+
+        $generationData = Http::timeout(10)->withoutVerifying()->get("https://pokeapi.co/api/v2/generation/$gen")->json();
+        $pokemonSpecies = $generationData['pokemon_species'];
+
+        usort($pokemonSpecies, function ($a, $b) {
+            return $a['url'] <=> $b['url'];
+        });
 
         $processedChains = [];
         $evolutionChainUrls = [];
 
-        for ($i = 1; $i <= 151; $i++) {
-            $this->line("Procesando Pokémon $i...");
-            $data = Http::timeout(10)->withoutVerifying()->get("https://pokeapi.co/api/v2/pokemon/$i")->json();
+        foreach ($pokemonSpecies as $species) {
+
+            $name = $species['name'];
+            $this->line("Procesando Pokémon $name");
+            $data = Http::timeout(10)->withoutVerifying()->get("https://pokeapi.co/api/v2/pokemon/$name")->json();
+            
+            if (!$data || !isset($data['id'])) {
+                $this->error("No se pudo obtener datos para $name");
+                continue;
+            }
+
+            $id = $data['id'];
 
             $pokemon = Pokemon::updateOrCreate(
-                ['pokedex_number' => $i],
+                ['pokedex_number' => $id],
                 [
                     'name' => $data['name'],
                     'sprite' => $data['sprites']['front_default'],

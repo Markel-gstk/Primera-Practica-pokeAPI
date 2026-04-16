@@ -12,8 +12,18 @@
                     <a href="{{ route('pokemons.index') }}" class="text-blue-500 hover:text-blue-700 mb-4 inline-block">← Volver a la lista</a>
 
                     <h1 class="text-2xl font-bold mb-4">{{ ucfirst($pokemon['name']) }}</h1>
-                    <div class="flex flex-row items-start gap-6 mb-6">
+                    <div class="flex flex-row items-start gap-20 mb-6">
                         <img src="{{ $pokemon['sprites']['front_default'] }}" alt="Imagen de {{ $pokemon['name'] }}" class="w-48 h-48 object-contain">
+
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2">Estadísticas:</h3>
+                            <ul class="list-disc list-inside mb-4">
+                                @foreach ($pokemon['stats'] as $stat)
+                                    <li>{{ ucfirst(str_replace('-', ' ', $stat['stat']['name'])) }}: {{ $stat['base_stat'] }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+
                     </div>
                     <h3 class="text-lg font-semibold mb-2">Tipos:</h3>
                     <ul class="list-disc list-inside mb-4">

@@ -17,7 +17,7 @@ class PokemonController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        $pokemons = $query->paginate(20);
+        $pokemons = $query->orderBy('pokedex_number', 'asc')->paginate(20);
 
         return view('pokemons.index', compact('pokemons'));
     }
