@@ -18,15 +18,10 @@ class GeneratePokemonData extends Command
         set_time_limit(0);
 
         $gen = $this->argument('generation');
-        Log::info("Generacion " . $gen . " iniciada.");
         $this->info('Iniciando generación de datos de Pokémon...');
 
         $generationData = Http::timeout(10)->withoutVerifying()->get("https://pokeapi.co/api/v2/generation/$gen")->json();
         $pokemonSpecies = $generationData['pokemon_species'];
-
-        usort($pokemonSpecies, function ($a, $b) {
-            return $a['url'] <=> $b['url'];
-        });
 
         $processedChains = [];
         $evolutionChainUrls = [];
@@ -49,6 +44,7 @@ class GeneratePokemonData extends Command
                 [
                     'name' => $data['name'],
                     'sprite' => $data['sprites']['front_default'],
+                    'generation' => $gen,
 
                     // ⭐ Stats
                     'hp' => $data['stats'][0]['base_stat'],
@@ -64,8 +60,7 @@ class GeneratePokemonData extends Command
                     'ability_hidden' => $data['abilities'][2]['ability']['name'] ?? null,
                 ]
             );
-
-
+            
             foreach ($data['types'] as $typeItem) {
                 $typeName = $typeItem['type']['name'];
                 $type = Type::firstOrCreate(['name' => $typeName]);

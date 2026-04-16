@@ -14,7 +14,7 @@ class PokemonAdminController extends Controller
         set_time_limit(0);
         $gen = $request->input('generation'); // Por defecto, generación 1
         // Ejecutar el comando Artisan para procesar los datos
-        Artisan::call("app:generate-pokemon-data $gen");
+        Artisan::call("app:generate-pokemon-data", ['generation' => $request->input('generation')]);
 
         return redirect()->back()->with('success', 'Datos de Pokémon generados correctamente.');
     }

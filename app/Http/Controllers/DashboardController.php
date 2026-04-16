@@ -9,7 +9,13 @@ class DashboardController extends Controller
 {
     public function index()
     {    
-       $mostrarFormulario = Pokemon::count();
-       return view('dashboard', compact('mostrarFormulario'));
+       $generacionesPendientes = [];
+       for ($gen = 1; $gen <= 9; $gen++) {
+           $existe = Pokemon::where('generation', $gen)->exists();
+           if (!$existe) {
+               $generacionesPendientes[] = $gen;
+           }
+       }
+       return view('dashboard', compact('generacionesPendientes'));
     }
 }
