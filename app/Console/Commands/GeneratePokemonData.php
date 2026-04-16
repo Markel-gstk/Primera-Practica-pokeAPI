@@ -26,8 +26,25 @@ class GeneratePokemonData extends Command
 
             $pokemon = Pokemon::updateOrCreate(
                 ['pokedex_number' => $i],
-                ['name' => $data['name'], 'sprite' => $data['sprites']['front_default']]
+                [
+                    'name' => $data['name'],
+                    'sprite' => $data['sprites']['front_default'],
+
+                    // ⭐ Stats
+                    'hp' => $data['stats'][0]['base_stat'],
+                    'attack' => $data['stats'][1]['base_stat'],
+                    'defense' => $data['stats'][2]['base_stat'],
+                    'special_attack' => $data['stats'][3]['base_stat'],
+                    'special_defense' => $data['stats'][4]['base_stat'],
+                    'speed' => $data['stats'][5]['base_stat'],
+
+                    // ⭐ Abilities
+                    'ability1' => $data['abilities'][0]['ability']['name'],
+                    'ability2' => $data['abilities'][1]['ability']['name'] ?? null,
+                    'ability_hidden' => $data['abilities'][2]['ability']['name'] ?? null,
+                ]
             );
+
 
             foreach ($data['types'] as $typeItem) {
                 $typeName = $typeItem['type']['name'];
