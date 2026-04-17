@@ -12,9 +12,11 @@
                     <a href="{{ route('pokemons.index') }}" class="text-blue-500 hover:text-blue-700 mb-4 inline-block">← Volver a la lista</a>
 
                     <h1 class="text-2xl font-bold mb-4">{{ ucfirst($pokemon['name']) }}</h1>
-                    <div class="flex flex-row items-start gap-24 mb-6">
-                        <img src="{{ $pokemon['sprites']['front_default'] }}" alt="Imagen de {{ $pokemon['name'] }}" class="w-60 h-60 object-contain">
-
+                    <div class="flex flex-row items-start gap-36 mb-6">
+                        <div>
+                            <img src="{{ $pokemon['sprites']['front_default'] }}" alt="Imagen de {{ $pokemon['name'] }}" class="w-48 h-48 object-contain"><br>
+                            <img src="{{ $pokemon['sprites']['front_shiny'] }}" alt="Imagen de {{ $pokemon['name'] }}" class="w-48 h-48 object-contain">    
+                        </div>
                         <div>
                             <h3 class="text-lg font-semibold mb-2">Estadísticas:</h3>
                             <ul class="list-disc list-inside mb-4">
