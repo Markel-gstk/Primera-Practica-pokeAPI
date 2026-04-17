@@ -44,13 +44,19 @@
                         </div>
 
                     </div>
-                    <h3 class="text-lg font-semibold mb-2">Tipos:</h3>
-                    <ul class="list-disc list-inside mb-4">
-                        @foreach ($pokemon['types'] as $tipo)
-                            <li>{{ $tipo['type']['name'] }}</li>
-                        @endforeach
-                    </ul>
-
+                    <div class="flex flex-row items-start gap-36 mb-6">
+                        <h3 class="text-lg font-semibold mb-2">Tipos:</h3>
+                        <ul class="list-disc list-inside mb-4">
+                            @foreach ($pokemon['types'] as $tipo)
+                                <li>{{ $tipo['type']['name'] }}</li>
+                            @endforeach
+                        </ul>
+                        <h3 class="text-lg font-semibold mb-2">Descripción:</h3>
+                        <p>{{ ucfirst($pokemon['name']) }}</p>
+                        @php
+                            Log::info("Guardada la descripción para $name: $descriptionEs"); 
+                        @endphp
+                    </div>    
                     <h3 class="text-lg font-semibold mb-2">Línea Evolutiva:</h3>
                     <div class="flex flex-row items-center gap-4 overflow-x-auto">
                         @php

@@ -39,6 +39,21 @@ class GeneratePokemonData extends Command
 
             $id = $data['id'];
 
+            // Obtener datos de la especie
+            $speciesUrl = $data['species']['url'];
+            $speciesData = Http::timeout(10)->withoutVerifying()->get($speciesUrl)->json();
+
+            // Buscar descripción en español
+            $descriptionEs = null;
+
+            foreach ($speciesData['flavor_text_entries'] as $entry) {
+                if ($entry['language']['name'] === 'es') {
+                    // Limpiar saltos de línea raros (\n, \f)
+                    $descriptionEs = str_replace(["\n", "\f"], ' ', $entry['flavor_text']);
+                    break;
+                }
+            }
+
             $pokemon = Pokemon::updateOrCreate(
                 ['pokedex_number' => $id],
                 [
@@ -58,9 +73,14 @@ class GeneratePokemonData extends Command
                     'ability1' => $data['abilities'][0]['ability']['name'],
                     'ability2' => $data['abilities'][1]['ability']['name'] ?? null,
                     'ability_hidden' => $data['abilities'][2]['ability']['name'] ?? null,
-                ]
-            );
-            
+
+                    // ⭐ Description
+                    'description' => $descriptionEs
+                     
+                ]                
+            ); 
+            /*Log::info("Guardada la descripción para $name: $descriptionEs"); */ 
+
             foreach ($data['types'] as $typeItem) {
                 $typeName = $typeItem['type']['name'];
                 $type = Type::firstOrCreate(['name' => $typeName]);
