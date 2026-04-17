@@ -29,6 +29,21 @@ class PokemonController extends Controller
             abort(404, 'Pokémon no encontrado');
         }
         $pokemon = $respuesta->json();
+        
+        $statsProcesadas = [];
+        $max = 250; //Este es el valor maximo que puede tiene una estadistica base.
+
+        foreach ($pokemon['stats'] as $stat) {
+            $nombre = ucfirst(str_replace('-', ' ', $stat['stat']['name']));
+            $valor = $stat['base_stat'];
+            $porcentaje = ($valor / $max) * 100;
+
+            $statsProcesadas[] = [
+                'nombre' => $nombre,
+                'valor' => $valor,
+                'porcentaje' => $porcentaje
+            ];
+        }
 
         // Get species for evolution
         $speciesResponse = Http::withoutVerifying()->get($pokemon['species']['url']);
@@ -38,6 +53,6 @@ class PokemonController extends Controller
         $evolutionResponse = Http::withoutVerifying()->get($species['evolution_chain']['url']);
         $evolutionChain = $evolutionResponse->json();
 
-        return view('pokemon', ['pokemon' => $pokemon, 'evolutionChain' => $evolutionChain]);
+        return view('pokemon', ['pokemon' => $pokemon, 'evolutionChain' => $evolutionChain, 'stats' => $statsProcesadas]);
     }
 }

@@ -13,13 +13,22 @@
 
                     <h1 class="text-2xl font-bold mb-4">{{ ucfirst($pokemon['name']) }}</h1>
                     <div class="flex flex-row items-start gap-60 mb-6">
-                        <img src="{{ $pokemon['sprites']['front_default'] }}" alt="Imagen de {{ $pokemon['name'] }}" class="w-48 h-48 object-contain">
+                        <img src="{{ $pokemon['sprites']['front_default'] }}" alt="Imagen de {{ $pokemon['name'] }}" class="w-60 h-60 object-contain">
 
                         <div>
                             <h3 class="text-lg font-semibold mb-2">Estadísticas:</h3>
                             <ul class="list-disc list-inside mb-4">
-                                @foreach ($pokemon['stats'] as $stat)
-                                    <li>{{ ucfirst(str_replace('-', ' ', $stat['stat']['name'])) }}: {{ $stat['base_stat'] }}</li>
+                                @foreach ($stats as $stat)
+                                    <div class="mb-3">
+                                        <div class="flex justify-between mb-1">
+                                            <span class="font-medium w-60">{{ $stat['nombre'] }}</span>
+                                            <span class="text-sm">{{ $stat['valor'] }}</span>
+                                        </div>
+
+                                        <div class="w-full bg-gray-300 rounded h-3 overflow-hidden">
+                                            <div class="h-3 bg-red-600 rounded" style="width: {{ $stat['porcentaje'] }}%"></div>
+                                        </div>
+                                    </div>
                                 @endforeach
                             </ul>
                         </div>
