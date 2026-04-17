@@ -83,7 +83,7 @@
                                     echo '<div class="flex flex-row items-center gap-4">'; // Contenedor para evoluciones
                                     $first = true;
                                     foreach ($chain['evolves_to'] as $evolution) {
-                                        if (!$first) {
+                                        if (!$first && count($chain['evolves_to']) < 2) {
                                             echo '<div class="text-2xl text-gray-500 mx-2">→</div>'; // Flecha entre múltiples
                                         }
                                         // Obtener detalles de esta evolución
