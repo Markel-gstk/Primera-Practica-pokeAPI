@@ -6,13 +6,13 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-12 lg:px-20">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+                <div class="p-16 text-gray-900 dark:text-gray-100">
                     <a href="{{ route('pokemons.index') }}" class="text-blue-500 hover:text-blue-700 mb-4 inline-block">← Volver a la lista</a>
 
                     <h1 class="text-2xl font-bold mb-4">{{ ucfirst($pokemon['name']) }}</h1>
-                    <div class="flex flex-row items-start gap-60 mb-6">
+                    <div class="flex flex-row items-start gap-24 mb-6">
                         <img src="{{ $pokemon['sprites']['front_default'] }}" alt="Imagen de {{ $pokemon['name'] }}" class="w-60 h-60 object-contain">
 
                         <div>
