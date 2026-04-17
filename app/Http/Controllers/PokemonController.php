@@ -6,15 +6,20 @@ use App\Models\Pokemon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\log;
 class PokemonController extends Controller
 {
     public function index(Request $request)
     {
+
         $query = Pokemon::query();
 
         if ($request->has('search') && $request->search) {
             $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('generation') && $request->generation) {
+        $query->where('generation', $request->generation);
         }
 
         $pokemons = $query->orderBy('pokedex_number', 'asc')->paginate(20);
