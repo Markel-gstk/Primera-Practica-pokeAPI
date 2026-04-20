@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pokemon;
+use App\Models\Evolution;
+use App\Http\Controllers\EvolutionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
@@ -28,35 +30,46 @@ class PokemonController extends Controller
     }
     public function show($id)
     {
-        $respuesta = Http::withoutVerifying()->get("https://pokeapi.co/api/v2/pokemon/{$id}");
+        $pokemon = Pokemon::where('pokedex_number', $id)->with('types')->firstOrFail();
         
-        if ($respuesta->failed()) {
-            abort(404, 'Pokémon no encontrado');
-        }
-        $pokemon = $respuesta->json();
-        
-        $statsProcesadas = [];
+
         $max = 250; //Este es el valor maximo que puede tiene una estadistica base.
 
-        foreach ($pokemon['stats'] as $stat) {
-            $nombre = ucfirst(str_replace('-', ' ', $stat['stat']['name']));
-            $valor = $stat['base_stat'];
-            $porcentaje = ($valor / $max) * 100;
-
-            $statsProcesadas[] = [
-                'nombre' => $nombre,
-                'valor' => $valor,
-                'porcentaje' => $porcentaje
-            ];
-        }
-
-        // Get species for evolution
-        $speciesResponse = Http::withoutVerifying()->get($pokemon['species']['url']);
-        $species = $speciesResponse->json();
+        $statsProcesadas = [
+            [
+                'nombre' => 'HP',
+                'valor' => $pokemon->hp,
+                'porcentaje' => ($pokemon->hp / $max) * 100
+            ],
+            [
+                'nombre' => 'Ataque',
+                'valor' => $pokemon->attack,
+                'porcentaje' => ($pokemon->attack / $max) * 100
+            ],
+            [
+                'nombre' => 'Defensa',
+                'valor' => $pokemon->defense,
+                'porcentaje' => ($pokemon->defense / $max) * 100
+            ],
+            [
+                'nombre' => 'Atq. Esp.',
+                'valor' => $pokemon->special_attack,
+                'porcentaje' => ($pokemon->special_attack / $max) * 100
+            ],
+            [
+                'nombre' => 'Def. Esp.',
+                'valor' => $pokemon->special_defense,
+                'porcentaje' => ($pokemon->special_defense / $max) * 100
+            ],
+            [
+                'nombre' => 'Velocidad',
+                'valor' => $pokemon->speed,
+                'porcentaje' => ($pokemon->speed / $max) * 100
+            ],
+        ];
 
         // Get evolution chain
-        $evolutionResponse = Http::withoutVerifying()->get($species['evolution_chain']['url']);
-        $evolutionChain = $evolutionResponse->json();
+        $evolutionChain= (new Evolution())->mostrarEvo($pokemon);
 
         return view('pokemon', ['pokemon' => $pokemon, 'evolutionChain' => $evolutionChain, 'stats' => $statsProcesadas]);
     }

@@ -11,11 +11,11 @@
                 <div class="p-16 text-gray-900 dark:text-gray-100">
                     <a href="{{ route('pokemons.index') }}" class="text-blue-500 hover:text-blue-700 mb-4 inline-block">← Volver a la lista</a>
 
-                    <h1 class="text-2xl font-bold mb-4">{{ ucfirst($pokemon['name']) }}</h1>
+                    <h1 class="text-2xl font-bold mb-4">{{ ucfirst($pokemon->name) }}</h1>
                     <div class="flex flex-row items-start gap-36 mb-6">
                         <div>
-                            <img src="{{ $pokemon['sprites']['front_default'] }}" alt="Imagen de {{ $pokemon['name'] }}" class="w-48 h-48 object-contain"><br>
-                            <img src="{{ $pokemon['sprites']['front_shiny'] }}" alt="Imagen de {{ $pokemon['name'] }}" class="w-48 h-48 object-contain">    
+                            <img src="{{ $pokemon->sprite }}" alt="Imagen de {{ $pokemon->name }}" class="w-48 h-48 object-contain"><br>
+                            <img src="{{ $pokemon->shiny }}" alt="Imagen de {{ $pokemon->name }}" class="w-48 h-48 object-contain">    
                         </div>
                         <div>
                             <h3 class="text-lg font-semibold mb-2">Estadísticas:</h3>
@@ -37,9 +37,9 @@
                         <div>
                             <h3 class="text-lg font-semibold mb-2">Habilidades:</h3>
                             <ul class="list-disc list-inside mb-4">
-                                @foreach ($pokemon['abilities'] as $ability)
-                                    <li>{{ ucfirst(str_replace('-', ' ', $ability['ability']['name'])) }} {{ $ability['is_hidden'] ? '(Oculta)' : '' }}</li>
-                                @endforeach
+                                <li>{{ ucfirst(str_replace('-', ' ', $pokemon->ability1)) }} {{ $pokemon['is_hidden'] ? '(Oculta)' : '' }}</li>
+                                <li>{{ ucfirst(str_replace('-', ' ', $pokemon->ability2)) }} {{ $pokemon['is_hidden'] ? '(Oculta)' : '' }}</li>
+                                <li>{{ ucfirst(str_replace('-', ' ', $pokemon->ability_hidden)) }} {{ $pokemon['is_hidden'] ? '(Oculta)' : '' }}</li>
                             </ul>
                         </div>
 
@@ -47,15 +47,12 @@
                     <div class="flex flex-row items-start gap-36 mb-6">
                         <h3 class="text-lg font-semibold mb-2">Tipos:</h3>
                         <ul class="list-disc list-inside mb-4">
-                            @foreach ($pokemon['types'] as $tipo)
-                                <li>{{ $tipo['type']['name'] }}</li>
+                            @foreach ($pokemon->types as $tipo)
+                                <li>{{ $tipo->name }}</li>
                             @endforeach
                         </ul>
                         <h3 class="text-lg font-semibold mb-2">Descripción:</h3>
-                        <p>{{ ucfirst($pokemon['name']) }}</p>
-                        @php
-                            Log::info("Guardada la descripción para $name: $descriptionEs"); 
-                        @endphp
+                        <p>{{ ucfirst($pokemon->description) }}</p>
                     </div>    
                     <h3 class="text-lg font-semibold mb-2">Línea Evolutiva:</h3>
                     <div class="flex flex-row items-center gap-4 overflow-x-auto">

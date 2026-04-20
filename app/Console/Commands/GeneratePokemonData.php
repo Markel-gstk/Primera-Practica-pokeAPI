@@ -59,6 +59,7 @@ class GeneratePokemonData extends Command
                 [
                     'name' => $data['name'],
                     'sprite' => $data['sprites']['front_default'],
+                    'shiny'=> $data['sprites']['front_shiny'],
                     'generation' => $gen,
 
                     // ⭐ Stats
