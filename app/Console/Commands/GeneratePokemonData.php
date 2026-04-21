@@ -55,8 +55,8 @@ class GeneratePokemonData extends Command
             }
 
             $pokemon = Pokemon::updateOrCreate(
-                ['pokedex_number' => $id],
-                [
+                [   'id'=> $id,
+                    'pokedex_number' => $id,
                     'name' => $data['name'],
                     'sprite' => $data['sprites']['front_default'],
                     'shiny'=> $data['sprites']['front_shiny'],

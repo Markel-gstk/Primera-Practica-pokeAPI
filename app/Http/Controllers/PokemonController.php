@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Pokemon;
 use App\Models\Evolution;
-use App\Http\Controllers\EvolutionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\log;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\EvolutionController;
+
 class PokemonController extends Controller
 {
     public function index(Request $request)
@@ -32,7 +32,7 @@ class PokemonController extends Controller
     {
         $pokemon = Pokemon::where('pokedex_number', $id)->with('types')->firstOrFail();
         
-
+ 
         $max = 250; //Este es el valor maximo que puede tiene una estadistica base.
 
         $statsProcesadas = [
@@ -69,8 +69,7 @@ class PokemonController extends Controller
         ];
 
         // Get evolution chain
-        $evolutionChain= (new Evolution())->mostrarEvo($pokemon);
-
+        $evolutionChain = (new EvolutionController())->mostrarEvo($pokemon->id);
         return view('pokemon', ['pokemon' => $pokemon, 'evolutionChain' => $evolutionChain, 'stats' => $statsProcesadas]);
     }
 }
