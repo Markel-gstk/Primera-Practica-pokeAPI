@@ -19,11 +19,11 @@ class Evolution extends Model
 
     public function pokemon()
     {
-        return $this->belongsTo(Pokemon::class, 'pokemon_id');
+        return $this->belongsTo(Pokemon::class, 'pokemon_id', 'pokedex_number');
     }
 
     public function toPokemon()
     {
-        return $this->belongsTo(Pokemon::class, 'to_pokemon_id');
+        return $this->belongsTo(Pokemon::class, 'to_pokemon_id', 'pokedex_number');
     }
 }
